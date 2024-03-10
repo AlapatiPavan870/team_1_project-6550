@@ -1599,7 +1599,7 @@ GameObject:
   - component: {fileID: 1064909265}
   - component: {fileID: 1064909264}
   m_Layer: 5
-  m_Name: Tree Stub
+  m_Name: Tree Stump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
