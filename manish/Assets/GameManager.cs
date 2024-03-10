@@ -82,10 +82,10 @@ public class MathGame : MonoBehaviour
                 }
                 else
                 {
-                    int wrongAnswer = Random.Range(answer + 1, answer + 5); // Change the range as per your requirement
+                    int wrongAnswer = Random.Range(answer / 2, answer + 3); // Change the range as per your requirement
                     while (wrongAnswers.Contains(wrongAnswer) || wrongAnswer == answer)
                     {
-                        wrongAnswer = Random.Range(answer + 1, answer + 5);
+                        wrongAnswer = Random.Range(answer / 2, answer + 3);
                     }
                     wrongAnswers.Add(wrongAnswer); // Add wrong answer to the list
                     answerButtons[i].GetComponentInChildren<Text>().text = wrongAnswer.ToString();
