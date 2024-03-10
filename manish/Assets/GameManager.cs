@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement; // Import SceneManager to handle scene changes
 using System.Collections.Generic;
+using System.Collections;
 
 public class MathGame : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class MathGame : MonoBehaviour
     public Button[] answerButtons;
     public Text questionCounterText;
     public GameObject pauseMenu; // Add reference to the pause menu panel
+    public GameObject correctAnswerPrompt;
+    public GameObject wrongAnswerPrompt;
+
 
     private int questionCounter = 0;
     private bool quizCompleted = false;
@@ -22,6 +26,8 @@ public class MathGame : MonoBehaviour
 
     void Start()
     {
+        correctAnswerPrompt.SetActive(false);
+        wrongAnswerPrompt.SetActive(false);
         startTime = Time.time;
         GenerateQuestion();
     }
@@ -104,13 +110,13 @@ public class MathGame : MonoBehaviour
     {
         Debug.Log("Correct!");
         correctAnswers++;
-        GenerateQuestion();
+        StartCoroutine(ShowPrompt(correctAnswerPrompt));
     }
 
     void WrongAnswer()
     {
         Debug.Log("Wrong!");
-        GenerateQuestion();
+        StartCoroutine(ShowPrompt(wrongAnswerPrompt));
     }
 
     public void PauseGame()
@@ -140,5 +146,12 @@ public class MathGame : MonoBehaviour
     public void Quit()
     {
         SceneManager.LoadScene("main"); // Load the main menu scene
+    }
+    IEnumerator ShowPrompt(GameObject prompt)
+    {
+        prompt.SetActive(true);
+        yield return new WaitForSeconds(2); // Wait for 2 seconds
+        prompt.SetActive(false);
+        GenerateQuestion(); // Continue to the next question or end the quiz
     }
 }
