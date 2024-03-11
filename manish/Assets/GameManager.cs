@@ -13,23 +13,41 @@ public class MathGame : MonoBehaviour
     public GameObject correctAnswerPrompt;
     public GameObject wrongAnswerPrompt;
 
+    private Button correctButton;
+    private Color defaultButtonColor = Color.white; // The default color for buttons
+    private Color correctButtonColor = Color.green; // The color for correct answers
+    private Color incorrectButtonColor = Color.red; // The color for incorrect answers
+
 
     private int questionCounter = 0;
     private bool quizCompleted = false;
     private bool gamePaused = false; // Add variable to track game pause state
     private int correctAnswers = 0;
     private int totalQuestions = 3;
+    private float rate;
     private float accuracy;
     private float startTime;
     private float endTime;
     private float totalTime;
+
 
     void Start()
     {
         correctAnswerPrompt.SetActive(false);
         wrongAnswerPrompt.SetActive(false);
         startTime = Time.time;
-        GenerateQuestion();
+        StartCoroutine(DelayBeforeNextQuestion());
+    }
+
+    IEnumerator DelayBeforeNextQuestion()
+    {
+        yield return new WaitForSeconds(0.5f); // Adjust the delay time as needed
+        // Generate the next question after the delay if the quiz is not completed and the game is not paused
+        if (!quizCompleted && !gamePaused)
+        {
+            GenerateQuestion();
+        }
+
     }
 
     void GenerateQuestion()
@@ -78,7 +96,8 @@ public class MathGame : MonoBehaviour
                 {
                     answerButtons[i].GetComponentInChildren<Text>().text = answer.ToString();
                     answerButtons[i].onClick.RemoveAllListeners(); // Remove previous listeners
-                    answerButtons[i].onClick.AddListener(() => CorrectAnswer());
+                    correctButton = answerButtons[i];
+                    answerButtons[i].onClick.AddListener(CorrectAnswer);
                 }
                 else
                 {
@@ -90,7 +109,7 @@ public class MathGame : MonoBehaviour
                     wrongAnswers.Add(wrongAnswer); // Add wrong answer to the list
                     answerButtons[i].GetComponentInChildren<Text>().text = wrongAnswer.ToString();
                     answerButtons[i].onClick.RemoveAllListeners(); // Remove previous listeners
-                    answerButtons[i].onClick.AddListener(() => WrongAnswer());
+                    answerButtons[i].onClick.AddListener(WrongAnswer);
                 }
             }
 
@@ -101,7 +120,8 @@ public class MathGame : MonoBehaviour
                 totalTime = endTime - startTime; // Calculate the total time taken
                 accuracy = ((float)correctAnswers / totalQuestions) * 100;
                 accuracy = ((float)correctAnswers / totalQuestions) * 100;
-                questionText.text = $"Quiz is completed!\nYour score: {correctAnswers}/{totalQuestions}\nAccuracy: {accuracy:F2}%\nTotal time: {totalTime:F2} seconds";
+                rate = (totalQuestions / totalTime) * 60f;
+                questionText.text = $"Quiz is completed!\nYour score: {correctAnswers}/{totalQuestions}\nAccuracy: {accuracy:F2}%\nRate: {rate:F2}/min";
             }
         }
     }
@@ -110,14 +130,35 @@ public class MathGame : MonoBehaviour
     {
         Debug.Log("Correct!");
         correctAnswers++;
+        HighlightButton(correctButton, correctButtonColor);
         StartCoroutine(ShowPrompt(correctAnswerPrompt));
     }
 
     void WrongAnswer()
     {
         Debug.Log("Wrong!");
+        HighlightButton(correctButton, correctButtonColor);
+        Button incorrectButton = (Button)UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+        HighlightButton(incorrectButton, incorrectButtonColor);
         StartCoroutine(ShowPrompt(wrongAnswerPrompt));
     }
+
+    void HighlightButton(Button button, Color color)
+    {
+        Image buttonImage = button.GetComponent<Image>();
+        if (buttonImage != null)
+        {
+            buttonImage.color = color;
+            StartCoroutine(ResetButtonColor(buttonImage));
+        }
+    }
+
+    IEnumerator ResetButtonColor(Image buttonImage)
+    {
+        yield return new WaitForSeconds(2.0f); // Adjust the delay time as needed
+        buttonImage.color = defaultButtonColor;
+    }
+
 
     public void PauseGame()
     {
@@ -150,8 +191,8 @@ public class MathGame : MonoBehaviour
     IEnumerator ShowPrompt(GameObject prompt)
     {
         prompt.SetActive(true);
-        yield return new WaitForSeconds(2); // Wait for 2 seconds
+        yield return new WaitForSeconds(2.0f); // Wait for 2 seconds
         prompt.SetActive(false);
-        GenerateQuestion(); // Continue to the next question or end the quiz
+        StartCoroutine(DelayBeforeNextQuestion()); // Call DelayBeforeNextQuestion after the delay
     }
 }
