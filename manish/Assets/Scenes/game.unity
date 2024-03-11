@@ -1557,7 +1557,7 @@ MonoBehaviour:
   - {fileID: 1324368087}
   - {fileID: 1866156231}
   questionCounterText: {fileID: 1816113578}
-  pauseMenu: {fileID: 0}
+  pauseMenu: {fileID: 243751007}
   correctAnswerPrompt: {fileID: 948464881}
   wrongAnswerPrompt: {fileID: 1685098776}
 --- !u!222 &1139285903
@@ -1976,7 +1976,7 @@ MonoBehaviour:
   - {fileID: 1324368087}
   - {fileID: 1866156231}
   questionCounterText: {fileID: 1816113578}
-  pauseMenu: {fileID: 0}
+  pauseMenu: {fileID: 243751007}
   correctAnswerPrompt: {fileID: 948464881}
   wrongAnswerPrompt: {fileID: 1685098776}
 --- !u!114 &1324368087
@@ -2964,7 +2964,7 @@ MonoBehaviour:
   - {fileID: 1324368087}
   - {fileID: 1866156231}
   questionCounterText: {fileID: 1816113578}
-  pauseMenu: {fileID: 0}
+  pauseMenu: {fileID: 243751007}
   correctAnswerPrompt: {fileID: 948464881}
   wrongAnswerPrompt: {fileID: 1685098776}
 --- !u!1 &1843884174
@@ -3104,7 +3104,7 @@ MonoBehaviour:
   - {fileID: 1324368087}
   - {fileID: 1866156231}
   questionCounterText: {fileID: 1816113578}
-  pauseMenu: {fileID: 0}
+  pauseMenu: {fileID: 243751007}
   correctAnswerPrompt: {fileID: 948464881}
   wrongAnswerPrompt: {fileID: 1685098776}
 --- !u!114 &1866156231
@@ -3699,7 +3699,7 @@ MonoBehaviour:
   - {fileID: 1324368087}
   - {fileID: 1866156231}
   questionCounterText: {fileID: 1816113578}
-  pauseMenu: {fileID: 0}
+  pauseMenu: {fileID: 243751007}
   correctAnswerPrompt: {fileID: 948464881}
   wrongAnswerPrompt: {fileID: 1685098776}
 --- !u!114 &2014758647

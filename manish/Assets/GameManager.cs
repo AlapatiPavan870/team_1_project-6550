@@ -31,11 +31,28 @@ public class MathGame : MonoBehaviour
     private float totalTime;
 
 
+
     void Start()
     {
+
         correctAnswerPrompt.SetActive(false);
         wrongAnswerPrompt.SetActive(false);
         startTime = Time.time;
+        StartCoroutine(DelayBeforeNextQuestion());
+    }
+    void InitializeGame()
+    {
+        // Reset all necessary game state variables here
+        questionCounter = 0;
+        quizCompleted = false;
+        gamePaused = false;
+        correctAnswers = 0;
+        correctAnswerPrompt.SetActive(false);
+        wrongAnswerPrompt.SetActive(false);
+        pauseMenu.SetActive(false);
+        startTime = Time.time;
+
+        // Start the game loop
         StartCoroutine(DelayBeforeNextQuestion());
     }
 
@@ -176,23 +193,29 @@ public class MathGame : MonoBehaviour
 
     public void RestartGame()
     {
+
         questionCounter = 0; // Reset question counter
         quizCompleted = false; // Reset quiz completion status
         gamePaused = false; // Reset game pause status
         pauseMenu.SetActive(false); // Hide the pause menu panel
         Time.timeScale = 1f; // Resume the game
         GenerateQuestion(); // Start generating questions again
+
     }
 
     public void Quit()
     {
-        SceneManager.LoadScene("main"); // Load the main menu scene
+        gamePaused = false;
+        pauseMenu.SetActive(false); // Hide the pause menu panel
+        Time.timeScale = 1f; // Restore normal time flow
+    
+        SceneManager.LoadScene(0); // Load the main menu scene
     }
     IEnumerator ShowPrompt(GameObject prompt)
     {
         prompt.SetActive(true);
         yield return new WaitForSeconds(2.0f); // Wait for 2 seconds
         prompt.SetActive(false);
-        StartCoroutine(DelayBeforeNextQuestion()); // Call DelayBeforeNextQuestion after the delay
+        
     }
 }
