@@ -60,23 +60,24 @@ public class MathGame : MonoBehaviour
         {
             // Increment question counter
             questionCounter++;
-            if (questionCounter < totalQuestions)
-            {
-                questionCounterText.text = $"{questionCounter} / {totalQuestions}";
-            }
-            else
-            {
-                questionCounterText.text = ""; // Hide question counter after 3 questions
-            }
-
+            
             // Generate random numbers for the addition question
             int num1 = UnityEngine.Random.Range(1, 11); // Change the range as per your requirement
             int num2 = UnityEngine.Random.Range(1, 11);
 
             int answer = num1 + num2;
 
-            // Display the question
-            questionText.text = num1 + " + " + num2 + "= ?";
+            if (questionCounter <= totalQuestions)
+            {
+                questionCounterText.text = $"{questionCounter} / {totalQuestions}";
+                // Display the question
+                questionText.text = num1 + " + " + num2 + "= ?";
+            }
+            else
+            {
+                questionCounterText.text = ""; // Hide question counter after 3 questions
+                questionText.text = ""; //Hide question text after 3 questions
+            }        
 
             // List to store wrong answers
             List<int> wrongAnswers = new List<int>();
