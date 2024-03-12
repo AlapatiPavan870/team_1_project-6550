@@ -43,15 +43,15 @@ public class MathGame : MonoBehaviour
     }
 
     IEnumerator DelayBeforeNextQuestion()
-    {
-        yield return new WaitForSeconds(0.5f); // Adjust the delay time as needed
+   {
+        yield return   new WaitForSeconds(0f); // Adjust the delay time as needed
         // Generate the next question after the delay if the quiz is not completed and the game is not paused
         if (!quizCompleted && !gamePaused)
         {
             GenerateQuestion();
         }
 
-    }
+    } 
 
     void GenerateQuestion()
     {
