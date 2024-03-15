@@ -62,8 +62,8 @@ public class MathGame : MonoBehaviour
             questionCounter++;
             
             // Generate random numbers for the addition question
-            int num1 = UnityEngine.Random.Range(1, 11); // Change the range as per your requirement
-            int num2 = UnityEngine.Random.Range(1, 11);
+            int num1 = UnityEngine.Random.Range(1, 9); // Change the range as per your requirement
+            int num2 = UnityEngine.Random.Range(1, 9-num1);
 
             int answer = num1 + num2;
 
@@ -200,7 +200,7 @@ public class MathGame : MonoBehaviour
 
     IEnumerator ResetButtonColor(Image buttonImage)
     {
-        yield return new WaitForSeconds(2.0f); // Adjust the delay time as needed
+        yield return new WaitForSeconds(0.5f); // Adjust the delay time as needed
         buttonImage.color = defaultButtonColor;
     }
 
@@ -240,7 +240,7 @@ public class MathGame : MonoBehaviour
     IEnumerator ShowPrompt(GameObject prompt)
     {
         prompt.SetActive(true);
-        yield return new WaitForSeconds(2.0f); // Wait for 2 seconds
+        yield return new WaitForSeconds(0.5f); // Wait for 2 seconds
         prompt.SetActive(false);
         StartCoroutine(DelayBeforeNextQuestion()); // Call DelayBeforeNextQuestion after the delay
     }
