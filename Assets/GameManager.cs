@@ -146,8 +146,15 @@ public class MathGame : MonoBehaviour
                 string currentDirectory1 = Application.dataPath; // Assumes the code file is in the "Assets" directory
                 string filePath1 = Path.Combine(currentDirectory1, "userProgress.txt");
                 Debug.Log($"File Path: {filePath1}");
+<<<<<<< Updated upstream
 
                 string csvContent1 = $"{totalQuestions},{correctAnswers},{accuracy:F2},{rate:F2}\n"; // Add newline character
+=======
+                string deviceID = SystemInfo.deviceUniqueIdentifier;
+                Debug.Log("Device ID: " + deviceID);
+
+                string csvContent1 = $"{deviceID},{totalQuestions},{correctAnswers},{accuracy:F2},{rate:F2}\n"; // Add newline character
+>>>>>>> Stashed changes
 
                 try
                 {
@@ -158,9 +165,12 @@ public class MathGame : MonoBehaviour
                     Debug.LogError($"Error writing to file: {e.Message}");
                 }
 
+<<<<<<< Updated upstream
 
 
                 // questionText.text = $"Quiz is completed!\nYour score: {correctAnswers}/{totalQuestions}\nAccuracy: {accuracy:F2}%\nRate: {rate:F2}/min";
+=======
+>>>>>>> Stashed changes
                 LoadShowScoreScene(); // Load the "showScore" scene
             }
         }
