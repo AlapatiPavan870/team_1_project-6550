@@ -18,11 +18,8 @@ public class getScore : MonoBehaviour
             // Read the contents of the "output.txt" file
             string currentDirectory = Application.dataPath;
             string filePath = Path.Combine(currentDirectory, "showScore.txt");
-<<<<<<< Updated upstream
-=======
             string deviceID = SystemInfo.deviceUniqueIdentifier;
             Debug.Log("Device ID: " + deviceID);
->>>>>>> Stashed changes
 
             if (File.Exists(filePath))
             {
