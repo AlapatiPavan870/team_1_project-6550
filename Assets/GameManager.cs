@@ -12,6 +12,7 @@ public class MathGame : MonoBehaviour
     public Text questionText;
     public Button[] answerButtons;
     public Text questionCounterText;
+    public GameObject Blurbackground;
     public GameObject pauseMenu; // Add reference to the pause menu panel
     public GameObject correctAnswerPrompt;
     public GameObject wrongAnswerPrompt;
@@ -39,10 +40,11 @@ public class MathGame : MonoBehaviour
         correctAnswerPrompt.SetActive(false);
         wrongAnswerPrompt.SetActive(false);
         startTime = Time.time;
-        StartCoroutine(DelayBeforeNextQuestion());
+        GenerateQuestion();
+        //StartCoroutine(DelayBeforeNextQuestion());
     }
 
-    IEnumerator DelayBeforeNextQuestion()
+   /* IEnumerator DelayBeforeNextQuestion()
    {
         yield return   new WaitForSeconds(0f); // Adjust the delay time as needed
         // Generate the next question after the delay if the quiz is not completed and the game is not paused
@@ -51,7 +53,7 @@ public class MathGame : MonoBehaviour
             GenerateQuestion();
         }
 
-    } 
+    } */
 
     void GenerateQuestion()
     {
@@ -62,8 +64,8 @@ public class MathGame : MonoBehaviour
             questionCounter++;
             
             // Generate random numbers for the addition question
-            int num1 = UnityEngine.Random.Range(1, 9); // Change the range as per your requirement
-            int num2 = UnityEngine.Random.Range(1, 9-num1);
+            int num1 = UnityEngine.Random.Range(1, 3); // Change the range as per your requirement
+            int num2 = UnityEngine.Random.Range(1, 3);
 
             int answer = num1 + num2;
 
@@ -75,8 +77,10 @@ public class MathGame : MonoBehaviour
             }
             else
             {
-                questionCounterText.text = ""; // Hide question counter after 3 questions
-                questionText.text = ""; //Hide question text after 3 questions
+                /*questionCounterText.text = ""; // Hide question counter after 3 questions
+                questionText.text = ""; //Hide question text after 3 questions*/
+                quizCompleted = true;
+                LoadShowScoreScene();// Load the "showScore" scene
             }        
 
             // List to store wrong answers
@@ -91,10 +95,10 @@ public class MathGame : MonoBehaviour
                 {
                     answerButtons[i].gameObject.SetActive(true); // Show answer buttons for first 3 questions
                 }
-                else
+                /*else
                 {
                     answerButtons[i].gameObject.SetActive(false); // Hide answer buttons after 3 questions
-                }
+                }*/
 
                 if (i == correctButtonIndex)
                 {
@@ -160,7 +164,8 @@ public class MathGame : MonoBehaviour
                     Debug.LogError($"Error writing to file: {e.Message}");
                 }
 
-                LoadShowScoreScene(); // Load the "showScore" scene
+                //LoadShowScoreScene(); // Load the "showScore" scene
+                //Moving it out of if block
             }
         }
     }
@@ -199,16 +204,30 @@ public class MathGame : MonoBehaviour
 
     IEnumerator ResetButtonColor(Image buttonImage)
     {
-        yield return new WaitForSeconds(0.5f); // Adjust the delay time as needed
+        if (quizCompleted == true)
+        {
+            yield return new WaitForSeconds(0.0f);
+        }
+        yield return new WaitForSeconds(1.0f); // Adjust the delay time as needed
         buttonImage.color = defaultButtonColor;
     }
 
+    // Helper method to set interactable state of an array of buttons
+    private void SetButtonsInteractable(Button[] buttons, bool interactable)
+    {
+        foreach (Button button in buttons)
+        {
+            button.interactable = interactable;
+        }
+    }
 
     public void PauseGame()
     {
         gamePaused = true;
         pauseMenu.SetActive(true); // Show the pause menu panel
         Time.timeScale = 0f; // Pause the game
+        SetButtonsInteractable(answerButtons, false);
+        Blurbackground.SetActive(true);
     }
 
     public void ResumeGame()
@@ -216,6 +235,8 @@ public class MathGame : MonoBehaviour
         gamePaused = false;
         pauseMenu.SetActive(false); // Hide the pause menu panel
         Time.timeScale = 1f; // Resume the game
+        SetButtonsInteractable(answerButtons, true);
+        Blurbackground.SetActive(false);
     }
 
     public void RestartGame()
@@ -225,6 +246,8 @@ public class MathGame : MonoBehaviour
         gamePaused = false; // Reset game pause status
         pauseMenu.SetActive(false); // Hide the pause menu panel
         Time.timeScale = 1f; // Resume the game
+        Blurbackground.SetActive(false);
+        SetButtonsInteractable(answerButtons, true);
         GenerateQuestion(); // Start generating questions again
     }
 
@@ -238,9 +261,14 @@ public class MathGame : MonoBehaviour
     }
     IEnumerator ShowPrompt(GameObject prompt)
     {
+        if (quizCompleted == true)
+        {
+            yield return new WaitForSeconds(0.0f);
+        }
         prompt.SetActive(true);
-        yield return new WaitForSeconds(0.5f); // Wait for 2 seconds
+        yield return new WaitForSeconds(1.0f); // Wait for 2 seconds
         prompt.SetActive(false);
-        StartCoroutine(DelayBeforeNextQuestion()); // Call DelayBeforeNextQuestion after the delay
+        GenerateQuestion();
+        //StartCoroutine(DelayBeforeNextQuestion()); // Call DelayBeforeNextQuestion after the delay
     }
 }
