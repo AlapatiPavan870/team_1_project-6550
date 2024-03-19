@@ -225,6 +225,7 @@ public class MathGame : MonoBehaviour
     {
         gamePaused = true;
         pauseMenu.SetActive(true); // Show the pause menu panel
+        
         Time.timeScale = 0f; // Pause the game
         SetButtonsInteractable(answerButtons, false);
         Blurbackground.SetActive(true);
@@ -233,6 +234,7 @@ public class MathGame : MonoBehaviour
     public void ResumeGame()
     {
         gamePaused = false;
+     
         pauseMenu.SetActive(false); // Hide the pause menu panel
         Time.timeScale = 1f; // Resume the game
         SetButtonsInteractable(answerButtons, true);
@@ -241,12 +243,14 @@ public class MathGame : MonoBehaviour
 
     public void RestartGame()
     {
+      
         questionCounter = 0; // Reset question counter
         quizCompleted = false; // Reset quiz completion status
         gamePaused = false; // Reset game pause status
         pauseMenu.SetActive(false); // Hide the pause menu panel
         Time.timeScale = 1f; // Resume the game
         Blurbackground.SetActive(false);
+       
         SetButtonsInteractable(answerButtons, true);
         GenerateQuestion(); // Start generating questions again
     }
