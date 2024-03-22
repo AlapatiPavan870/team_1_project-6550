@@ -516,7 +516,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 243751007}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -524,12 +524,12 @@ RectTransform:
   - {fileID: 77689362}
   - {fileID: 1933795303}
   - {fileID: 46023515}
-  m_Father: {fileID: 391487421}
+  m_Father: {fileID: 1194457628}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 10.860413, y: -83.305176}
-  m_SizeDelta: {x: 200.1194, y: -678.3335}
+  m_AnchoredPosition: {x: -36.314022, y: -458.53174}
+  m_SizeDelta: {x: 905.3573, y: 2799.3271}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &243751009
 MonoBehaviour:
@@ -954,7 +954,6 @@ RectTransform:
   - {fileID: 2014758645}
   - {fileID: 1324368085}
   - {fileID: 1866156229}
-  - {fileID: 243751008}
   - {fileID: 928586485}
   - {fileID: 1194457628}
   m_Father: {fileID: 569168307}
@@ -1689,7 +1688,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -795, y: 1750.6}
-  m_SizeDelta: {x: 478.36, y: 352.9042}
+  m_SizeDelta: {x: 480, y: 350}
   m_Pivot: {x: 0.28284675, y: 0.5}
 --- !u!114 &958616275
 MonoBehaviour:
@@ -1837,7 +1836,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: addition problem text
+  m_Text: Addition Problem Text
 --- !u!114 &1139285902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1856,7 +1855,7 @@ MonoBehaviour:
   - {fileID: 1324368087}
   - {fileID: 1866156231}
   questionCounterText: {fileID: 1816113578}
-  Blurbackground: {fileID: 8214538779224951479, guid: 89bfcd90c82e440dcbd0c45280dbd79f, type: 3}
+  Blurbackground: {fileID: 1969825390}
   pauseMenu: {fileID: 243751007}
   correctAnswerPrompt: {fileID: 948464881}
   wrongAnswerPrompt: {fileID: 1685098776}
@@ -2035,6 +2034,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1139285904}
+  - {fileID: 243751008}
   m_Father: {fileID: 391487421}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
