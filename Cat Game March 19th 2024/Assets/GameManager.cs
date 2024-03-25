@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Collections;
 using TMPro;
 using System;
-using System.IO; // Added for file I/O
+using System.IO; // Added for file I/O
 
 public class MathGame : MonoBehaviour
 {
@@ -16,7 +16,6 @@ public class MathGame : MonoBehaviour
     public GameObject pauseMenu; // Add reference to the pause menu panel
     public GameObject correctAnswerPrompt;
     public GameObject wrongAnswerPrompt;
-    public GameObject problemQuestionCanvas;
     public GameObject[] catUnits;
 
     private Button correctButton;
@@ -58,25 +57,19 @@ public class MathGame : MonoBehaviour
      } */
     void DisplayCatsForQuestion(int num1, int num2)
     {
-        // Deactivate all cats initially
+        // First, deactivate all cats
         foreach (GameObject cat in catUnits)
         {
             cat.SetActive(false);
         }
 
-        // Activate the first row of cats based on num1
-        for (int i = 0; i < num1 && i < 5; i++)
+        // Then activate the cats for num1 and num2
+        int totalCatsToShow = num1 + num2;
+        for (int i = 0; i < totalCatsToShow; i++)
         {
-            catUnits[i].SetActive(true);
-        }
-
-        // Activate the second row of cats based on num2
-        for (int i = 5; i < 5 + num2 && i < catUnits.Length; i++)
-        {
-            catUnits[i].SetActive(true);
+            if (i < catUnits.Length) catUnits[i].SetActive(true);
         }
     }
-
     void GenerateQuestion()
     {
 
@@ -84,6 +77,13 @@ public class MathGame : MonoBehaviour
         {
             // Increment question counter
             questionCounter++;
+
+            // Disable answer buttons for a brief moment before the first question
+            if (questionCounter == 1)
+                {
+                    SetButtonsInteractable(answerButtons, false);
+                    StartCoroutine(EnableButtonsAfterDelay());
+                }
 
             // Generate random numbers for the addition question
             int num1 = UnityEngine.Random.Range(1, 3); // Change the range as per your requirement
@@ -151,14 +151,14 @@ public class MathGame : MonoBehaviour
                 endTime = Time.time; // Record the end time when the quiz is completed
                 totalTime = endTime - startTime; // Calculate the total time taken
                 accuracy = ((float)correctAnswers / totalQuestions) * 100;
-                accuracy = ((float)correctAnswers / totalQuestions) * 100;
+                accuracy = Mathf.Round(accuracy * 100) / 100; // Round accuracy to two decimal places
                 rate = (totalQuestions / totalTime) * 60f;
 
                 string currentDirectory = Application.dataPath; // Assumes the code file is in the "Assets" directory
                 string filePath = Path.Combine(currentDirectory, "showScore.txt");
                 Debug.Log($"File Path: {filePath}");
 
-                string csvContent = $"{totalQuestions},{correctAnswers},{accuracy},{rate:F2}";
+                string csvContent = $"{totalQuestions},{correctAnswers},{accuracy:F2},{rate:F2}";
 
                 try
                 {
@@ -192,6 +192,12 @@ public class MathGame : MonoBehaviour
                 //Moving it out of if block
             }
         }
+    }
+
+    IEnumerator EnableButtonsAfterDelay()
+    {
+        yield return new WaitForSeconds(0.0f); // Adjust the delay time as needed
+        SetButtonsInteractable(answerButtons, true);
     }
 
     public void LoadShowScoreScene()
@@ -248,82 +254,77 @@ public class MathGame : MonoBehaviour
     public void PauseGame()
     {
         gamePaused = true;
-        pauseMenu.SetActive(true);
-        problemQuestionCanvas.SetActive(false);
-        Time.timeScale = 0f; // Effectively pauses the game
-        SetButtonsInteractable(answerButtons, false);
-        Blurbackground.SetActive(true);
+        pauseMenu.SetActive(true); // Show the pause menu panel
 
-        // Deactivate cats directly in this method
+        Time.timeScale = 0f; // Pause the game
+                             //
         foreach (GameObject cat in catUnits)
         {
-            // Directly disable the SpriteRenderer component
+            // Check if the cat GameObject has a SpriteRenderer component and disable it
             SpriteRenderer catSprite = cat.GetComponent<SpriteRenderer>();
             if (catSprite != null)
             {
                 catSprite.enabled = false;
             }
 
-            // Pause animations by setting animator speed to 0
+            // Optionally, pause animations if you have them and they don't automatically pause
             Animator catAnimator = cat.GetComponent<Animator>();
             if (catAnimator != null)
             {
                 catAnimator.speed = 0;
             }
         }
-    }
 
+
+        //
+        SetButtonsInteractable(answerButtons, false);
+        Blurbackground.SetActive(true);
+    }
 
     public void ResumeGame()
     {
         gamePaused = false;
-        pauseMenu.SetActive(false);
-        problemQuestionCanvas.SetActive(true);
-        Time.timeScale = 1f;
-        ReactivateCats();
-        SetButtonsInteractable(answerButtons, true);
-        Blurbackground.SetActive(false);
-    }
 
-    void ReactivateCats()
-    {
+        pauseMenu.SetActive(false); // Hide the pause menu panel
+        Time.timeScale = 1f; // Resume the game
+
+        //
+        // Enable cat sprites
         foreach (GameObject cat in catUnits)
         {
-            // Re-enable the SpriteRenderer component
+            // Check if the cat GameObject has a SpriteRenderer component and enable it
             SpriteRenderer catSprite = cat.GetComponent<SpriteRenderer>();
             if (catSprite != null)
             {
                 catSprite.enabled = true;
             }
 
-            // Resume animations if they were paused
+            // Optionally, resume animations if you have them and they were paused
             Animator catAnimator = cat.GetComponent<Animator>();
             if (catAnimator != null)
             {
                 catAnimator.speed = 1;
             }
         }
+        //
+        SetButtonsInteractable(answerButtons, true);
+        Blurbackground.SetActive(false);
     }
-
-
 
     public void RestartGame()
     {
-        gamePaused = false;
-        pauseMenu.SetActive(false);
-        problemQuestionCanvas.SetActive(true);
-        Time.timeScale = 1f;
+
+        questionCounter = 0; // Reset question counter
+        quizCompleted = false; // Reset quiz completion status
+        gamePaused = false; // Reset game pause status
+        pauseMenu.SetActive(false); // Hide the pause menu panel
+        Time.timeScale = 1f; // Resume the game
         Blurbackground.SetActive(false);
 
-        foreach (GameObject cat in catUnits)
-        {
-            cat.SetActive(false); // Ensure cats start from a deactivated state for consistency
-        }
-
-        ReactivateCats(); // Ensure visual components are active before they're needed
         SetButtonsInteractable(answerButtons, true);
-        GenerateQuestion(); // This should include activating the necessary cats
+        GenerateQuestion(); // Start generating questions again
     }
+
     public void Quit()
     {
         gamePaused = false;
