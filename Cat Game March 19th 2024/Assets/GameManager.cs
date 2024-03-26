@@ -151,14 +151,14 @@ public class MathGame : MonoBehaviour
                 endTime = Time.time; // Record the end time when the quiz is completed
                 totalTime = endTime - startTime; // Calculate the total time taken
                 accuracy = ((float)correctAnswers / totalQuestions) * 100;
-                accuracy = ((float)correctAnswers / totalQuestions) * 100;
+                accuracy = Mathf.Round(accuracy * 100) / 100; // Round accuracy to two decimal places
                 rate = (totalQuestions / totalTime) * 60f;
 
                 string currentDirectory = Application.dataPath; // Assumes the code file is in the "Assets" directory
                 string filePath = Path.Combine(currentDirectory, "showScore.txt");
                 Debug.Log($"File Path: {filePath}");
 
-                string csvContent = $"{totalQuestions},{correctAnswers},{accuracy},{rate:F2}";
+                string csvContent = $"{totalQuestions},{correctAnswers},{accuracy:F2},{rate:F2}";
 
                 try
                 {
