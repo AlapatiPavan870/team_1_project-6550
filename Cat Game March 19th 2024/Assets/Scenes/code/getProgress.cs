@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using TMPro;
+using TMPro; 
 
 public class DisplayLastFiveScores : MonoBehaviour
 {
-    public TextMeshProUGUI scoreTableText;
+    public TextMeshProUGUI scoreTableText; 
 
     private void Start()
     {
@@ -23,20 +23,23 @@ public class DisplayLastFiveScores : MonoBehaviour
             string deviceID = SystemInfo.deviceUniqueIdentifier;
             var lines = File.ReadAllLines(filePath);
 
-            var matchingData = lines
-                .Where(line => line.Split(',')[0] == deviceID)
-                .Select(line => line.Split(','))
-                .Reverse() // Reverse to get the last entries first
-                .Take(5) // Take only the last 5 entries
-                .Reverse() // Reverse again to display them in the original order
-                .ToList();
+            var matchingData = lines.AsEnumerable() // Convert to IEnumerable for LINQ
+                                    .Where(line => line.Split(',')[0] == deviceID)
+                                    .Select(line => line.Split(','))
+                                    .ToList(); 
 
-            if (matchingData.Any())
+            if (matchingData.Count > 0)
             {
-                foreach (var record in matchingData)
-                {
-                    scoreTableText.text += $"{record[2]} | {record[3]}% | {record[4]}/min\n";
-                }
+                int totalQuestions = matchingData.Sum(record => int.Parse(record[1]));
+                int totalCorrectAnswers = matchingData.Sum(record => int.Parse(record[2]));
+                float totalAccuracy = (totalCorrectAnswers / (float)totalQuestions) * 100.0f;
+                float totalRate = matchingData.Sum(record => float.Parse(record[4]));
+                float averageRate = totalRate / matchingData.Count;
+
+                scoreTableText.text = $@"Total Questions: {totalQuestions}
+Correct Answers: {totalCorrectAnswers}
+Accuracy: {totalAccuracy:F2}%
+Average Rate: {averageRate:F2}/min";
             }
             else
             {
