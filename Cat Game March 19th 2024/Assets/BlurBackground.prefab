@@ -95,4 +95,5 @@ MonoBehaviour:
   pauseMenu: {fileID: 0}
   correctAnswerPrompt: {fileID: 0}
   wrongAnswerPrompt: {fileID: 0}
+  problemQuestionCanvas: {fileID: 0}
   catUnits: []
