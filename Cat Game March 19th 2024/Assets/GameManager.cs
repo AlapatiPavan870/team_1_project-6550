@@ -309,6 +309,8 @@ public class MathGame : MonoBehaviour
 
     public void RestartGame()
     {
+        questionCounter = 0;
+        quizCompleted = false;
         gamePaused = false;
         pauseMenu.SetActive(false);
         problemQuestionCanvas.SetActive(true);
@@ -324,6 +326,7 @@ public class MathGame : MonoBehaviour
         SetButtonsInteractable(answerButtons, true);
         GenerateQuestion(); // This should include activating the necessary cats
     }
+
     public void Quit()
     {
         gamePaused = false;
