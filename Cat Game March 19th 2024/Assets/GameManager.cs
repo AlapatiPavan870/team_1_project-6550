@@ -6,9 +6,6 @@ using System.Collections;
 using TMPro;
 using System;
 using System.IO; // Added for file I/O
-using ClassLibrary1;
-
-
 
 public class MathGame : MonoBehaviour
 {
@@ -59,7 +56,6 @@ public class MathGame : MonoBehaviour
          }
 
      } */
-   
     void DisplayCatsForQuestion(int num1, int num2)
     {
         // Deactivate all cats initially
@@ -93,12 +89,9 @@ public class MathGame : MonoBehaviour
             int num1 = UnityEngine.Random.Range(1, 3); // Change the range as per your requirement
             int num2 = UnityEngine.Random.Range(1, 3);
 
-            //int answer = num1 + num2;
-            
-            BasicMathsFunctions math = new BasicMathsFunctions(); // Instantiate BasicMathsFunctions from ClassLibrary1 Nuget package
-            int answer = (int)math.Addition(num1, num2); // Call the Addition method and cast the result to int
-            DisplayCatsForQuestion(num1, num2);
-     
+            int answer = num1 + num2;
+
+            DisplayCatsForQuestion(num1, num2); //new
 
             if (questionCounter <= totalQuestions)
             {
