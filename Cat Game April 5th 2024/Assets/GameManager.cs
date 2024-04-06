@@ -19,12 +19,17 @@ public class MathGame : MonoBehaviour
     public GameObject wrongAnswerPrompt;
     public GameObject problemQuestionCanvas;
     public GameObject[] catUnits;
+    public Vector3[] startPositions; // Animation Functionality (off screen position)
+    public Vector3[] targetPositions;
+    public float speed = 0f; // Animation Functionality: Speed at which the cat moves
+    public GameObject catContainer; // Animation Functionality: Assign this in the Inspector
+
 
     private Button correctButton;
     private Color defaultButtonColor = Color.white; // The default color for buttons
     private Color correctButtonColor = Color.green; // The color for correct answers
     private Color incorrectButtonColor = Color.red; // The color for incorrect answers
-
+    private Vector3 offScreenPosition = new Vector3(-10f, 0f, 0f); // Animation Functionality: Example off-screen position
 
     private int questionCounter = 0;
     private bool quizCompleted = false;
@@ -40,12 +45,12 @@ public class MathGame : MonoBehaviour
 
     void Start()
     {
-        correctAnswerPrompt.SetActive(false);
-        wrongAnswerPrompt.SetActive(false);
         startTime = Time.time;
+        InitializeCatsAtStartPositions();
         GenerateQuestion();
-        //StartCoroutine(DelayBeforeNextQuestion());
     }
+
+
 
     /* IEnumerator DelayBeforeNextQuestion()
     {
@@ -83,6 +88,7 @@ public class MathGame : MonoBehaviour
 
         if (!quizCompleted && !gamePaused) // Check if the quiz is not completed and the game is not paused
         {
+            ResetCatPositionsAndAnimations(); // Animation functionality 
             // Increment question counter
             questionCounter++;
 
@@ -94,7 +100,7 @@ public class MathGame : MonoBehaviour
             BasicMathsFunctions math = new BasicMathsFunctions(); // Instantiate BasicMathsFunctions from NuGet package
             int answer = (int)math.Addition(num1, num2); // Call the Addition method and cast the result to int
 
-            DisplayCatsForQuestion(num1, num2); 
+            DisplayCatsForQuestion(num1, num2);
 
             if (questionCounter <= totalQuestions)
             {
@@ -274,6 +280,7 @@ public class MathGame : MonoBehaviour
                 catAnimator.speed = 0;
             }
         }
+        Time.timeScale = 0f; // added for animation functionality 
     }
 
 
@@ -349,5 +356,97 @@ public class MathGame : MonoBehaviour
         prompt.SetActive(false);
         GenerateQuestion();
         //StartCoroutine(DelayBeforeNextQuestion()); // Call DelayBeforeNextQuestion after the delay
+    }
+
+
+
+
+    // Added animation functionality starts here 
+    void Update()
+    {
+        if (!gamePaused && !quizCompleted)
+        {
+            for (int i = 0; i < catUnits.Length; i++)
+            {
+                MoveCatToTarget(i); 
+            }
+        }
+    }
+
+    public void MoveCatToTarget(int catIndex)
+    {
+        if (catIndex < 0 || catIndex >= catUnits.Length || catIndex >= targetPositions.Length)
+        {
+            Debug.LogError("Index out of range.", this);
+            return;
+        }
+
+        GameObject cat = catUnits[catIndex];
+        Vector3 targetPos = targetPositions[catIndex];
+        cat.transform.position = Vector3.MoveTowards(cat.transform.position, targetPos, speed * Time.deltaTime);
+
+        Animator animator = cat.GetComponent<Animator>();
+        if (animator != null)
+        {
+            bool hasReachedTarget = cat.transform.position == targetPos;
+            animator.SetBool("IsWalking", !hasReachedTarget);
+        }
+    }
+
+    void ResetCatPositionsAndAnimations()
+    {
+        for (int i = 0; i < catUnits.Length; i++)
+        {
+            if (i < startPositions.Length)
+            {
+                catUnits[i].transform.position = startPositions[i];
+                Animator animator = catUnits[i].GetComponent<Animator>();
+                if (animator != null)
+                {
+                    animator.SetBool("IsWalking", false);
+                }
+            }
+        }
+    }
+
+    public void MakeCatsWalkOff()
+    {
+        StartCoroutine(MoveCatsOffScreen());
+    }
+
+    private IEnumerator MoveCatsOffScreen()
+    {
+        foreach (GameObject cat in catUnits)
+        {
+            if (cat.activeSelf)
+            {
+                yield return MoveCatOffScreen(cat.transform);
+            }
+        }
+    }
+
+    private IEnumerator MoveCatOffScreen(Transform catTransform)
+    {
+        Vector3 offScreenPosition = new Vector3(-10f, 0f, 0f); 
+        while (catTransform.position.x != offScreenPosition.x)
+        {
+            catTransform.position = Vector3.MoveTowards(catTransform.position, offScreenPosition, speed * Time.deltaTime);
+            yield return null;
+        }
+        catTransform.gameObject.SetActive(false);
+    }
+    void InitializeCatsAtStartPositions()
+    {
+        for (int i = 0; i < catUnits.Length; i++)
+        {
+            if (i < startPositions.Length)
+            {
+                catUnits[i].transform.position = startPositions[i];
+            }
+            else
+            {
+                Debug.LogWarning($"No start position for cat at index {i}, using cat's current position.");
+            }
+        }
     }
 }
