@@ -23,6 +23,8 @@ public class MathGame : MonoBehaviour
     public Vector3[] targetPositions;
     public float speed = 0f; // Animation Functionality: Speed at which the cat moves
     public GameObject catContainer; // Animation Functionality: Assign this in the Inspector
+    public AudioSource correctAnswerSound;
+    public AudioSource wrongAnswerSound;
 
 
     private Button correctButton;
@@ -93,8 +95,8 @@ public class MathGame : MonoBehaviour
             questionCounter++;
 
             // Generate random numbers for the addition question
-            int num1 = UnityEngine.Random.Range(1, 3); // Change the range as per your requirement
-            int num2 = UnityEngine.Random.Range(1, 3);
+            int num1 = UnityEngine.Random.Range(1, 5); // Change the range as per your requirement
+            int num2 = UnityEngine.Random.Range(1, 5);
 
             //int answer = num1 + num2;
             BasicMathsFunctions math = new BasicMathsFunctions(); // Instantiate BasicMathsFunctions from NuGet package
@@ -214,6 +216,7 @@ public class MathGame : MonoBehaviour
         correctAnswers++;
         HighlightButton(correctButton, correctButtonColor);
         StartCoroutine(ShowPrompt(correctAnswerPrompt));
+        correctAnswerSound.Play();
     }
 
     void WrongAnswer()
@@ -223,6 +226,7 @@ public class MathGame : MonoBehaviour
         Button incorrectButton = (Button)UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
         HighlightButton(incorrectButton, incorrectButtonColor);
         StartCoroutine(ShowPrompt(wrongAnswerPrompt));
+        wrongAnswerSound.Play();
     }
 
     void HighlightButton(Button button, Color color)
